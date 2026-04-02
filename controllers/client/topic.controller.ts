@@ -6,4 +6,8 @@ export const topic = async (req: Request, res: Response) => {
   const topics = await Topic.find({
     deleted: false,
   });
+
+  res.render("views/client/pages/topics/index", {
+    pageTitle: "Music Topics",
+  });
 };
