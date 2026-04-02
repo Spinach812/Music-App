@@ -9,5 +9,6 @@ export const topic = async (req: Request, res: Response) => {
 
   res.render("views/client/pages/topics/index", {
     pageTitle: "Music Topics",
+    topics: topics,
   });
 };
