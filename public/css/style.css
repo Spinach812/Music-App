@@ -1,0 +1,33 @@
+/* Header */
+header.header {
+  background-color: #f8f9fa;
+  padding: 1rem 0;
+}
+
+header.header .inner-logo img {
+  max-width: 100px;
+}
+
+header.header .inner-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+header.header .inner-menu ul li {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+header.header .inner-menu ul li a {
+  text-decoration: none;
+}
+/* End header */
+
+/* Footer */
+.footer {
+  background-color: #f8f9fa;
+  padding: 1rem 0;
+  text-align: center;
+}
+/* End footer */

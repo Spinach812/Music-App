@@ -20,6 +20,8 @@ app.use(cors());
 app.set("views", "./views");
 app.set("view engine", "pug");
 
+app.use(express.static("public"));
+
 // parse application/json
 app.use(bodyParser.json());
 
