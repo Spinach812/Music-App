@@ -1,0 +1,90 @@
+import { Request, Response } from "express";
+import Topic from "../../models/topic.models";
+import Song from "../../models/song.model";
+import Singer from "../../models/singer.model";
+
+// [GET] /songs/:slugTopic
+export const list = async (req: Request, res: Response) => {
+  const slugTopic = req.params.slugTopic;
+
+  const topic = await Topic.findOne({
+    slug: slugTopic,
+    status: "active",
+    deleted: false,
+  });
+
+  if (!topic) {
+    res.redirect("/topics");
+  }
+
+  const songs = await Song.find({
+    status: "active",
+    deleted: false,
+    topicId: topic?.id,
+  })
+    .select("avatar title slug singerId like")
+    .populate({
+      path: "singerId",
+      match: { status: "active", deleted: false },
+    })
+    .lean();
+
+  res.render("views/client/pages/song/list", {
+    pageTitle: topic?.title,
+    songs: songs,
+  });
+};
+
+// [GET] /songs/detail/:slugSong
+export const detail = async (req: Request, res: Response) => {
+  const slugSong: string = req.params.slugSong.toString();
+
+  const song = await Song.findOne({
+    slug: slugSong,
+    status: "active",
+    deleted: false,
+  });
+
+  const singer = await Singer.findOne({
+    _id: song?.singerId,
+    deleted: false,
+  }).select("fullName");
+
+  const topic = await Topic.findOne({
+    _id: song?.topicId,
+    deleted: false,
+  }).select("title");
+
+  res.render("client/pages/songs/detail", {
+    pageTitle: "Song detail",
+    song: song,
+    singer: singer,
+    topic: topic,
+  });
+};
+
+// [GET] /songs/like/yes/:idSong
+export const like = async (req: Request, res: Response) => {
+  const idSong: string = req.params.idSong.toString();
+
+  const song = await Song.findOne({
+    _id: idSong,
+    status: "active",
+    deleted: false,
+  });
+
+  if (song) {
+    const newLike = song?.like + 1;
+    await Song.updateOne(
+      {
+        _id: idSong,
+      },
+      { like: newLike },
+    );
+    res.json({
+      code: 200,
+      message: "Succes",
+      like: song?.like + 1,
+    });
+  }
+};
